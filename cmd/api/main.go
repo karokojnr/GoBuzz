@@ -8,6 +8,8 @@ import (
 	"github.com/karokojnr/GoBuzz/internal/store"
 )
 
+const version = "0.0.1"
+
 func main() {
 	cfg := config{
 		addr: env.GetString("ADDR", ":8080"),
