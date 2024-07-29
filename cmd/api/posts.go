@@ -99,6 +99,7 @@ func (app *application) updatePostHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	if err := app.store.Posts.Update(r.Context(), post); err != nil {
+		// todo: return 409 if version mismatch
 		app.internalServerError(w, r, err)
 		return
 	}
