@@ -17,7 +17,7 @@ type Post struct {
 	Tags      []string  `json:"tags"`
 	CreatedAt string    `json:"created_at"`
 	UpdatedAt string    `json:"updated_at"`
-	Version  int       `json:"version"`
+	Version   int       `json:"version"`
 	Comments  []Comment `json:"comments"`
 }
 
@@ -31,7 +31,7 @@ func (s *PostStore) Create(ctx context.Context, p *Post) error {
 	VALUES ($1, $2, $3, $4) RETURNING id, created_at, updated_at
 	`
 
-	ctx, cancel := context.WithTimeout(ctx,QueryTimeoutDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	err := s.db.QueryRowContext(
@@ -61,7 +61,7 @@ func (s *PostStore) GetByID(ctx context.Context, id int64) (*Post, error) {
 	WHERE id = $1
 	`
 
-	ctx, cancel := context.WithTimeout(ctx,QueryTimeoutDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	var p Post
@@ -96,7 +96,7 @@ func (s *PostStore) Update(ctx context.Context, p *Post) error {
 	RETURNING version
 	`
 
-	ctx, cancel := context.WithTimeout(ctx,QueryTimeoutDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	err := s.db.QueryRowContext(
@@ -110,10 +110,10 @@ func (s *PostStore) Update(ctx context.Context, p *Post) error {
 
 	if err != nil {
 		switch {
-			case errors.Is(err, sql.ErrNoRows):
-				return ErrNotFound
-			default:
-				return err
+		case errors.Is(err, sql.ErrNoRows):
+			return ErrNotFound
+		default:
+			return err
 		}
 	}
 
@@ -127,7 +127,7 @@ func (s *PostStore) Delete(ctx context.Context, id int64) error {
 	WHERE id = $1
 	`
 
-	ctx, cancel := context.WithTimeout(ctx,QueryTimeoutDuration)
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
 	res, err := s.db.ExecContext(ctx, query, id) // execcontext does not return rows
