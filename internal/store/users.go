@@ -47,7 +47,7 @@ func (s *UserStore) Create(ctx context.Context, u *User) error {
 
 func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {
 	query := `
-	SELECT id, username, email, created_at
+	SELECT id, username, email, password, created_at
 	FROM users
 	WHERE id = $1
 	`
@@ -60,11 +60,17 @@ func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {
 		&u.ID,
 		&u.Username,
 		&u.Email,
+		&u.Password,
 		&u.CreatedAt,
 	)
 
 	if err != nil {
-		return nil, err
+		switch err {
+		case sql.ErrNoRows:
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
 	}
 
 	return u, nil
