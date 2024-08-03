@@ -44,3 +44,28 @@ func (s *UserStore) Create(ctx context.Context, u *User) error {
 
 	return nil
 }
+
+func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {
+	query := `
+	SELECT id, username, email, created_at
+	FROM users
+	WHERE id = $1
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	u := new(User)
+	err := s.db.QueryRowContext(ctx, query, id).Scan(
+		&u.ID,
+		&u.Username,
+		&u.Email,
+		&u.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
