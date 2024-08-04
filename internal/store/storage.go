@@ -9,6 +9,7 @@ import (
 
 var (
 	ErrNotFound          = errors.New("resource not found")
+	ErrConflict		  = errors.New("resource version conflict")
 	QueryTimeoutDuration = 5 * time.Second
 )
 

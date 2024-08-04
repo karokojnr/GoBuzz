@@ -3,6 +3,8 @@ package store
 import (
 	"context"
 	"database/sql"
+
+	"github.com/lib/pq"
 )
 
 type Follower struct {
@@ -39,8 +41,11 @@ func (fs *FollowersStore) Unfollow(ctx context.Context, followerId, userId int64
 		DELETE FROM followers
 		WHERE user_id = $1 AND follower_id = $2
 	`, userId, followerId)
+
 	if err != nil {
-		return err
+		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
+			return ErrConflict
+		}
 	}
 
 	return nil

@@ -38,8 +38,15 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 	ctx := r.Context()
 
 	if err := app.store.Followers.Follow(ctx, followerUser.ID, payload.UserID); err != nil {
-		app.internalServerError(w, r, err)
-		return
+		switch err {
+		case store.ErrConflict:
+			app.conflictError(w, r, err)
+			return
+		default:
+			app.internalServerError(w, r, err)
+			return
+		}
+
 	}
 
 	if err := app.jsonResponse(w, http.StatusNoContent, nil); err != nil {
