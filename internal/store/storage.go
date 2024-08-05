@@ -9,7 +9,7 @@ import (
 
 var (
 	ErrNotFound          = errors.New("resource not found")
-	ErrConflict		  = errors.New("resource version conflict")
+	ErrConflict          = errors.New("resource version conflict")
 	QueryTimeoutDuration = 5 * time.Second
 )
 
@@ -19,6 +19,7 @@ type Storage struct {
 		GetByID(context.Context, int64) (*Post, error)
 		Update(context.Context, *Post) error
 		Delete(context.Context, int64) error
+		GetUserFeed(context.Context, int64) ([]PostWithMetadata, error)
 	}
 
 	Users interface {
