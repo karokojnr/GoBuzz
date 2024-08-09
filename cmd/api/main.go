@@ -30,8 +30,8 @@ const version = "0.0.1"
 
 func main() {
 	cfg := config{
-		addr:   env.GetString("ADDR", ":8080"),
-		apiURL: env.GetString("EXTERNAL_URL", "localhost:8080"),
+		addr:   env.GetString("ADDR", ":3000"),
+		apiURL: env.GetString("EXTERNAL_URL", "localhost:3000"),
 		db: dbConfig{
 			addr:         env.GetString("DB_ADDR", "postgres://admin:changeme@127.0.0.1:5432/gobuzz?sslmode=disable"),
 			maxOpenConns: env.GetInt("DB_MAX_OPEN_CONNS", 30),
