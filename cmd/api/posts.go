@@ -37,12 +37,12 @@ type CreatePostPayload struct {
 func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request) {
 	var payload CreatePostPayload
 	if err := readJSON(w, r, &payload); err != nil {
-		app.badRequestRepsonse(w, r, err)
+		app.badRequestError(w, r, err)
 		return
 	}
 
 	if err := Validate.Struct(payload); err != nil {
-		app.badRequestRepsonse(w, r, err)
+		app.badRequestError(w, r, err)
 		return
 	}
 
@@ -124,12 +124,12 @@ func (app *application) updatePostHandler(w http.ResponseWriter, r *http.Request
 
 	var payload UpdatePostPayload
 	if err := readJSON(w, r, &payload); err != nil {
-		app.badRequestRepsonse(w, r, err)
+		app.badRequestError(w, r, err)
 		return
 	}
 
 	if err := Validate.Struct(payload); err != nil {
-		app.badRequestRepsonse(w, r, err)
+		app.badRequestError(w, r, err)
 		return
 	}
 

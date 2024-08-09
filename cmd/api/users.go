@@ -58,7 +58,7 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 	//todo: revert back to auth user id from ctx
 	var payload FollowUser
 	if err := readJSON(w, r, &payload); err != nil {
-		app.badRequestRepsonse(w, r, err)
+		app.badRequestError(w, r, err)
 		return
 	}
 
@@ -100,7 +100,7 @@ func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Reque
 	//todo: revert back to auth user id from ctx
 	var payload FollowUser
 	if err := readJSON(w, r, &payload); err != nil {
-		app.badRequestRepsonse(w, r, err)
+		app.badRequestError(w, r, err)
 		return
 	}
 
@@ -120,7 +120,7 @@ func (app *application) usersContextMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 		if err != nil {
-			app.badRequestRepsonse(w, r, err)
+			app.badRequestError(w, r, err)
 			return
 		}
 

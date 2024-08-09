@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
-
 	"github.com/karokojnr/GoBuzz/internal/db"
 	"github.com/karokojnr/GoBuzz/internal/env"
 	"github.com/karokojnr/GoBuzz/internal/store"
+	"go.uber.org/zap"
 )
 
 const version = "0.0.1"
@@ -40,6 +39,11 @@ func main() {
 		},
 	}
 
+	// Logger
+	logger := zap.Must(zap.NewProduction()).Sugar()
+	defer logger.Sync()
+
+	// Database
 	db, err := db.New(
 		cfg.db.addr,
 		cfg.db.maxOpenConns,
@@ -48,22 +52,23 @@ func main() {
 	)
 
 	if err != nil {
-		log.Panic(err)
+		logger.Fatal(err)
 	}
 
 	defer db.Close()
 
-	log.Println("successfully connected to the database🚀")
+	logger.Info("successfully connected to the database🚀")
 
 	store := store.NewStorage(db)
 
 	app := &application{
 		config: cfg,
 		store:  store,
+		logger: logger,
 	}
 
 	mux := app.mount()
 
-	log.Fatal(app.run(mux))
+	logger.Fatal(app.run(mux))
 
 }

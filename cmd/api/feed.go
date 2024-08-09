@@ -34,12 +34,12 @@ func (app *application) getUserFeedHandler(w http.ResponseWriter, r *http.Reques
 
 	pfq, err := pfq.Parse(r)
 	if err != nil {
-		app.badRequestRepsonse(w, r, err)
+		app.badRequestError(w, r, err)
 		return
 	}
 
 	if err := Validate.Struct(pfq); err != nil {
-		app.badRequestRepsonse(w, r, err)
+		app.badRequestError(w, r, err)
 		return
 	}
 
