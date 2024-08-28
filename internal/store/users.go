@@ -9,11 +9,11 @@ import (
 
 // model
 type User struct {
-	ID        int64  `json:"id"`
-	Username  string `json:"username"`
-	Email     string `json:"email"`
+	ID        int64    `json:"id"`
+	Username  string   `json:"username"`
+	Email     string   `json:"email"`
 	Password  password `json:"-"`
-	CreatedAt string `json:"created_at"`
+	CreatedAt string   `json:"created_at"`
 }
 
 type password struct {
@@ -62,6 +62,15 @@ func (s *UserStore) Create(ctx context.Context, u *User) error {
 	}
 
 	return nil
+}
+
+func (s *UserStore) CreateAndInvite(ctx context.Context, u *User, token string) error {
+	return withTx(s.db, ctx, func(tx *sql.Tx) error {
+		// insert user
+		// insert invite
+		return nil
+	})
+
 }
 
 func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {

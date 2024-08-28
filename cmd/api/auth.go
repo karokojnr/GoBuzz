@@ -46,6 +46,15 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	ctx := r.Context()
+
+	err := app.store.Users.CreateAndInvite(ctx, user, "token-123")
+	if err != nil {
+		app.internalServerError(w, r, err)
+		return
+	}
+
+	// mail
 	// todo: change after adding authentication
 	if err := app.jsonResponse(w, http.StatusCreated, nil); err != nil {
 		app.internalServerError(w, r, err)
