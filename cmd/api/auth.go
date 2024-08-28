@@ -48,7 +48,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 
 	ctx := r.Context()
 
-	err := app.store.Users.CreateAndInvite(ctx, user, "token-123")
+	err := app.store.Users.CreateAndInvite(ctx, user, "", app.config.mail.exp)
 	if err != nil {
 		app.internalServerError(w, r, err)
 		return
