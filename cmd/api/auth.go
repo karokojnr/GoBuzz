@@ -50,7 +50,14 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 
 	err := app.store.Users.CreateAndInvite(ctx, user, "", app.config.mail.exp)
 	if err != nil {
-		app.internalServerError(w, r, err)
+		switch err {
+		case store.ErrDuplicateEmail:
+			app.badRequestError(w, r, err)
+		case store.ErrDuplicateUsername:
+			app.badRequestError(w, r, err)
+		default:
+			app.internalServerError(w, r, err)
+		}
 		return
 	}
 

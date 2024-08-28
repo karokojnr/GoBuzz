@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"net/mail"
 	"time"
 
 	"github.com/go-chi/chi/v5"
