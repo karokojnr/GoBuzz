@@ -53,9 +53,9 @@ func withTx(db *sql.DB, ctx context.Context, fn func(*sql.Tx) error) error {
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
 
 	if err := fn(tx); err != nil {
+		_ = tx.Rollback()
 		return err
 	}
 
