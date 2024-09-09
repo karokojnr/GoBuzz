@@ -96,7 +96,6 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		app.logger.Errorw("failed to send welcome email", "error", err)
 		// rollback user creation if mail fails (SAGA pattern)
-
 		if err := app.store.Users.Delete(ctx, user.ID); err != nil {
 			app.logger.Errorw("failed to rollback user creation", "error", err)
 		}
@@ -106,7 +105,6 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// todo: change after adding authentication
 	if err := app.jsonResponse(w, http.StatusCreated, userWithToken); err != nil {
 		app.internalServerError(w, r, err)
 		return
