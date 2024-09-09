@@ -7,6 +7,8 @@ require (
 	github.com/lib/pq v1.10.9
 )
 
+require github.com/sendgrid/rest v2.6.9+incompatible // indirect
+
 require (
 	github.com/swaggo/files/v2 v2.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
@@ -27,6 +29,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/sendgrid/sendgrid-go v3.16.0+incompatible
 	github.com/swaggo/http-swagger/v2 v2.0.2
 	github.com/swaggo/swag v1.16.3
 	golang.org/x/crypto v0.26.0

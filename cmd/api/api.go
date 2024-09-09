@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/karokojnr/GoBuzz/docs" // this is required to generate swagger docs
+	"github.com/karokojnr/GoBuzz/internal/mailer"
 	"github.com/karokojnr/GoBuzz/internal/store"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
@@ -17,6 +18,7 @@ type application struct {
 	config config
 	store  store.Storage
 	logger *zap.SugaredLogger
+	mailer mailer.Client
 }
 
 type config struct {
@@ -85,7 +87,6 @@ func (app *application) mount() http.Handler {
 				r.Get("/feed", app.getUserFeedHandler)
 			})
 		})
-
 
 		// public routes
 		r.Route("/auth", func(r chi.Router) {
