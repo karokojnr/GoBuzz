@@ -27,6 +27,7 @@ type Storage struct {
 		CreateAndInvite(ctx context.Context, user *User, token string, exp time.Duration) error
 		Activate(context.Context, string) error
 		GetByID(context.Context, int64) (*User, error)
+		Delete(context.Context, int64) error
 	}
 
 	Comments interface {

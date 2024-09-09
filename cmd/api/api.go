@@ -27,6 +27,7 @@ type config struct {
 	env    string
 	apiURL string
 	mail   mailConfig
+	frontendURL string
 }
 
 type dbConfig struct {
@@ -37,7 +38,13 @@ type dbConfig struct {
 }
 
 type mailConfig struct {
-	exp time.Duration
+	fromEmail string
+	sendGrid sendGridConfig
+	exp      time.Duration
+}
+
+type sendGridConfig struct {
+	apiKey string
 }
 
 func (app *application) mount() http.Handler {

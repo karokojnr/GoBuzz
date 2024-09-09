@@ -5,6 +5,7 @@ import (
 
 	"github.com/karokojnr/GoBuzz/internal/db"
 	"github.com/karokojnr/GoBuzz/internal/env"
+	"github.com/karokojnr/GoBuzz/internal/mailer"
 	"github.com/karokojnr/GoBuzz/internal/store"
 	"go.uber.org/zap"
 )
@@ -31,8 +32,9 @@ const version = "0.0.1"
 
 func main() {
 	cfg := config{
-		addr:   env.GetString("ADDR", ":3000"),
-		apiURL: env.GetString("EXTERNAL_URL", "localhost:3000"),
+		addr:        env.GetString("ADDR", ":3000"),
+		apiURL:      env.GetString("EXTERNAL_URL", "localhost:3000"),
+		frontendURL: env.GetString("FRONTEND_URL", "http://localhost:4000"),
 		db: dbConfig{
 			addr:         env.GetString("DB_ADDR", "postgres://admin:changeme@127.0.0.1:5432/gobuzz?sslmode=disable"),
 			maxOpenConns: env.GetInt("DB_MAX_OPEN_CONNS", 30),
@@ -41,7 +43,11 @@ func main() {
 		},
 		env: env.GetString("ENV", "development"),
 		mail: mailConfig{
-			exp: time.Hour * 24 * 23,
+			exp:       time.Hour * 24 * 23,
+			fromEmail: env.GetString("FROM_EMAIL", ""),
+			sendGrid: sendGridConfig{
+				apiKey: env.GetString("SENDGRID_API_KEY", ""),
+			},
 		},
 	}
 
@@ -67,10 +73,13 @@ func main() {
 
 	store := store.NewStorage(db)
 
+	mailer := mailer.NewSendgrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
+
 	app := &application{
 		config: cfg,
 		store:  store,
 		logger: logger,
+		mailer: mailer,
 	}
 
 	mux := app.mount()
