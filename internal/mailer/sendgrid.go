@@ -3,7 +3,6 @@ package mailer
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"text/template"
 	"time"
 
@@ -26,24 +25,24 @@ func NewSendgrid(fromEmail, apiKey string) *SendgridMailer {
 	}
 }
 
-func (s *SendgridMailer) Send(templateFile, username, email string, data any, isSandbox bool) error {
+func (s *SendgridMailer) Send(templateFile, username, email string, data any, isSandbox bool) (int, error) {
 	from := mail.NewEmail(FromName, s.fromEmail)
 	to := mail.NewEmail(username, email)
 
 	tmpl, err := template.ParseFS(FS, "templates/"+templateFile)
 	if err != nil {
-		return err
+		return -1, err
 	}
 	subject := new(bytes.Buffer)
 	err = tmpl.ExecuteTemplate(subject, "subject", data)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	body := new(bytes.Buffer)
 	err = tmpl.ExecuteTemplate(body, "body", data)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	message := mail.NewSingleEmail(from, subject.String(), to, "", body.String())
@@ -53,19 +52,17 @@ func (s *SendgridMailer) Send(templateFile, username, email string, data any, is
 		},
 	})
 
+	var retryErr error
 	for i := 0; i < maxRetries; i++ {
-		res, err := s.client.Send(message)
-		if err != nil {
-			log.Printf("Failed to send email to %v, attempt %d of %d \n", email, i+1, maxRetries)
-			log.Printf("Error: %v \n", err)
-
+		res, retryErr := s.client.Send(message)
+		if retryErr != nil {
 			// exponential backoff
 			time.Sleep(time.Second * time.Duration(i+1))
 			continue
 		}
 
-		log.Printf("Email sent with status code: %v \n", res.StatusCode)
-		return nil
+		return res.StatusCode, nil
 	}
-	return fmt.Errorf("Failed to send email to %v after %d attempts", email, maxRetries)
+
+	return -1, fmt.Errorf("Failed to send email after %d attempts, error: %v", maxRetries, retryErr)
 }
