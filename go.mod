@@ -7,7 +7,10 @@ require (
 	github.com/lib/pq v1.10.9
 )
 
-require github.com/sendgrid/rest v2.6.9+incompatible // indirect
+require (
+	github.com/go-chi/cors v1.2.1 // indirect
+	github.com/sendgrid/rest v2.6.9+incompatible // indirect
+)
 
 require (
 	github.com/swaggo/files/v2 v2.0.0 // indirect
