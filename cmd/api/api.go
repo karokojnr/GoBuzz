@@ -29,6 +29,7 @@ type config struct {
 	apiURL      string
 	mail        mailConfig
 	frontendURL string
+	auth 	  authConfig
 }
 
 type dbConfig struct {
@@ -46,6 +47,15 @@ type mailConfig struct {
 
 type sendGridConfig struct {
 	apiKey string
+}
+
+type authConfig struct {
+	basic authBasicConfig
+}
+
+type authBasicConfig struct {
+	user string
+	pass string
 }
 
 func (app *application) mount() http.Handler {
