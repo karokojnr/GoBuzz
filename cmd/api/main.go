@@ -49,6 +49,12 @@ func main() {
 				apiKey: env.GetString("SENDGRID_API_KEY", ""),
 			},
 		},
+		auth: authConfig{
+			basic: authBasicConfig{
+				user: env.GetString("BASIC_AUTH_USER", ""),
+				pass: env.GetString("BASIC_AUTH_PASS", ""),
+			},
+		},
 	}
 
 	// Logger
