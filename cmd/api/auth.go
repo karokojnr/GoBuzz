@@ -154,6 +154,7 @@ func (app *application) createTokenHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	// from AuthO docs: https://auth0.com/docs/tokens/json-web-tokens/json-web-token-claims
 	claims := jwt.MapClaims{
 		"sub": user.ID,
 		"exp": time.Now().Add(app.config.auth.token.exp).Unix(),

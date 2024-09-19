@@ -55,6 +55,11 @@ func main() {
 				user: env.GetString("BASIC_AUTH_USER", ""),
 				pass: env.GetString("BASIC_AUTH_PASS", ""),
 			},
+			token: tokenConfig{
+				secret: env.GetString("AUTH_TOKEN_SECRET", "changeme"),
+				exp:    time.Hour * 24 * 3, // 3 days
+				iss:    "gobuzz",
+			},
 		},
 	}
 
@@ -82,9 +87,7 @@ func main() {
 
 	mailer := mailer.NewSendgrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
 
-	tokenHost := "gobuzz"
-
-	jwtAuthenticator := auth.NewJWTAuthenticator(cfg.auth.token.secret, tokenHost, tokenHost)
+	jwtAuthenticator := auth.NewJWTAuthenticator(cfg.auth.token.secret, cfg.auth.token.iss, cfg.auth.token.iss)
 
 	app := &application{
 		config:        cfg,
