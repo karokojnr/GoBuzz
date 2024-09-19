@@ -100,7 +100,7 @@ func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {
 	query := `
 	SELECT id, username, email, password, created_at
 	FROM users
-	WHERE id = $1
+	WHERE id = $1 AND is_active = true
 	`
 
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
@@ -108,6 +108,37 @@ func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {
 
 	u := new(User)
 	err := s.db.QueryRowContext(ctx, query, id).Scan(
+		&u.ID,
+		&u.Username,
+		&u.Email,
+		&u.Password,
+		&u.CreatedAt,
+	)
+
+	if err != nil {
+		switch err {
+		case sql.ErrNoRows:
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return u, nil
+}
+
+func (s *UserStore) GetByEmail(ctx context.Context, email string) (*User, error) {
+	query := `
+	SELECT id, username, email, password, created_at
+	FROM users
+	WHERE email = $1 AND is_active = true
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	u := new(User)
+	err := s.db.QueryRowContext(ctx, query, email).Scan(
 		&u.ID,
 		&u.Username,
 		&u.Email,

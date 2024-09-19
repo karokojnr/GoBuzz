@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/karokojnr/GoBuzz/docs" // this is required to generate swagger docs
+	"github.com/karokojnr/GoBuzz/internal/auth"
 	"github.com/karokojnr/GoBuzz/internal/mailer"
 	"github.com/karokojnr/GoBuzz/internal/store"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
@@ -20,6 +21,7 @@ type application struct {
 	store  store.Storage
 	logger *zap.SugaredLogger
 	mailer mailer.Client
+	authenticator auth.Authenticator
 }
 
 type config struct {
@@ -51,11 +53,17 @@ type sendGridConfig struct {
 
 type authConfig struct {
 	basic authBasicConfig
+	token tokenConfig
 }
 
 type authBasicConfig struct {
 	user string
 	pass string
+}
+
+type tokenConfig struct {
+	exp time.Duration
+	iss string
 }
 
 func (app *application) mount() http.Handler {
