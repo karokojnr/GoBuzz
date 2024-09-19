@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 
+	"github.com/karokojnr/GoBuzz/internal/auth"
 	"github.com/karokojnr/GoBuzz/internal/db"
 	"github.com/karokojnr/GoBuzz/internal/env"
 	"github.com/karokojnr/GoBuzz/internal/mailer"
@@ -81,11 +82,16 @@ func main() {
 
 	mailer := mailer.NewSendgrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
 
+	tokenHost := "gobuzz"
+
+	jwtAuthenticator := auth.NewJWTAuthenticator(cfg.auth.token.secret, tokenHost, tokenHost)
+
 	app := &application{
-		config: cfg,
-		store:  store,
-		logger: logger,
-		mailer: mailer,
+		config:        cfg,
+		store:         store,
+		logger:        logger,
+		mailer:        mailer,
+		authenticator: jwtAuthenticator,
 	}
 
 	mux := app.mount()

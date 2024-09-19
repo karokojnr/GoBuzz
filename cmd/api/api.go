@@ -62,6 +62,7 @@ type authBasicConfig struct {
 }
 
 type tokenConfig struct {
+	secret string
 	exp time.Duration
 	iss string
 }
