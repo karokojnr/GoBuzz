@@ -17,10 +17,10 @@ import (
 )
 
 type application struct {
-	config config
-	store  store.Storage
-	logger *zap.SugaredLogger
-	mailer mailer.Client
+	config        config
+	store         store.Storage
+	logger        *zap.SugaredLogger
+	mailer        mailer.Client
 	authenticator auth.Authenticator
 }
 
@@ -63,8 +63,8 @@ type authBasicConfig struct {
 
 type tokenConfig struct {
 	secret string
-	exp time.Duration
-	iss string
+	exp    time.Duration
+	iss    string
 }
 
 func (app *application) mount() http.Handler {
@@ -96,6 +96,7 @@ func (app *application) mount() http.Handler {
 		r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL(docsURL)))
 
 		r.Route("/posts", func(r chi.Router) {
+			r.Use(app.AuthTokenMiddleware)
 			r.Post("/", app.createPostHandler)
 
 			r.Route("/{id}", func(r chi.Router) {
