@@ -101,10 +101,10 @@ func (s *UserStore) CreateAndInvite(ctx context.Context, u *User, token string, 
 
 func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {
 	query := `
-	SELECT id, username, email, password, created_at, roles.*
+	SELECT users.id, username, email, password, created_at, roles.*
 	FROM users
 	JOIN roles ON users.role_id = roles.id
-	WHERE id = $1 AND is_active = true
+	WHERE users.id = $1 AND is_active = true
 	`
 
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
