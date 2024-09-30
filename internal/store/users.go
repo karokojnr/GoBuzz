@@ -101,8 +101,9 @@ func (s *UserStore) CreateAndInvite(ctx context.Context, u *User, token string, 
 
 func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {
 	query := `
-	SELECT id, username, email, password, created_at
+	SELECT id, username, email, password, created_at, roles.*
 	FROM users
+	JOIN roles ON users.role_id = roles.id
 	WHERE id = $1 AND is_active = true
 	`
 
@@ -116,6 +117,10 @@ func (s *UserStore) GetByID(ctx context.Context, id int64) (*User, error) {
 		&u.Email,
 		&u.Password.hash,
 		&u.CreatedAt,
+		&u.Role.ID,
+		&u.Role.Name,
+		&u.Role.Level,
+		&u.Role.Description,
 	)
 
 	if err != nil {
