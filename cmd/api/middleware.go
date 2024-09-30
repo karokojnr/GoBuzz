@@ -88,3 +88,13 @@ func (app *application) AuthTokenMiddleware(next http.Handler) http.Handler {
 	})
 
 }
+
+func (app *application) checkPostOwnership(requiredRole string, next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		// user := getUserFromContext(r)
+		// post := getPostFromContext(r)
+
+		next.ServeHTTP(w, r)
+	})
+}
