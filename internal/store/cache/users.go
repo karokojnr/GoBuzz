@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/karokojnr/GoBuzz/internal/store"
@@ -12,6 +13,8 @@ import (
 type UserStore struct {
 	rdb *redis.Client
 }
+
+const UserExpTime = time.Minute
 
 func (us *UserStore) Get(ctx context.Context, id int64) (*store.User, error) {
 	cacheKey := fmt.Sprintf("user:%d", id)
@@ -38,6 +41,6 @@ func (us *UserStore) Set(ctx context.Context, u *store.User) error {
 		return err
 	}
 
-	return us.rdb.Set(ctx, cacheKey, json, 0).Err()
+	return us.rdb.Set(ctx, cacheKey, json, UserExpTime).Err()
 
 }
