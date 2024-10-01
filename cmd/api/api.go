@@ -12,6 +12,7 @@ import (
 	"github.com/karokojnr/GoBuzz/internal/auth"
 	"github.com/karokojnr/GoBuzz/internal/mailer"
 	"github.com/karokojnr/GoBuzz/internal/store"
+	"github.com/karokojnr/GoBuzz/internal/store/cache"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
 )
@@ -19,6 +20,7 @@ import (
 type application struct {
 	config        config
 	store         store.Storage
+	cacheStore    cache.Cache
 	logger        *zap.SugaredLogger
 	mailer        mailer.Client
 	authenticator auth.Authenticator
@@ -32,6 +34,14 @@ type config struct {
 	mail        mailConfig
 	frontendURL string
 	auth        authConfig
+	redisCfg    redisConfig
+}
+
+type redisConfig struct {
+	addr    string
+	pw      string
+	db      int
+	enabled bool
 }
 
 type dbConfig struct {
