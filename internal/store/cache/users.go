@@ -42,11 +42,10 @@ func (us *UserStore) Set(ctx context.Context, u *store.User) error {
 	if err != nil {
 		return err
 	}
-
 	return us.rdb.Set(ctx, cacheKey, json, UserExpTime).Err()
-
 }
 
 func (us *UserStore) Delete(ctx context.Context, id int64) error {
-	return nil
+	cacheKey := fmt.Sprintf("user:%d", id)
+	return us.rdb.Del(ctx, cacheKey).Err()
 }
