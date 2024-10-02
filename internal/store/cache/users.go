@@ -46,3 +46,7 @@ func (us *UserStore) Set(ctx context.Context, u *store.User) error {
 	return us.rdb.Set(ctx, cacheKey, json, UserExpTime).Err()
 
 }
+
+func (us *UserStore) Delete(ctx context.Context, id int64) error {
+	return nil
+}

@@ -133,7 +133,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 //	@Failure		400		{object}	error
 //	@Failure		401		{object}	error
 //	@Failure		500		{object}	error
-//	@Router			/authentication/token [post]
+//	@Router			/auth/token [post]
 func (app *application) createTokenHandler(w http.ResponseWriter, r *http.Request) {
 	var payload CreateUserTokenPayload
 	if err := readJSON(w, r, &payload); err != nil {

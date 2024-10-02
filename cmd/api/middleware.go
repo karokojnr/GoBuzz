@@ -58,7 +58,7 @@ func (app *application) AuthTokenMiddleware(next http.Handler) http.Handler {
 
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
-			app.unauthorizedBasicError(w, r, fmt.Errorf("authorization header is invalid"))
+			app.unauthorizedError(w, r, fmt.Errorf("authorization header is invalid"))
 			return
 		}
 
@@ -126,6 +126,10 @@ func (app *application) checkRolePrecedence(ctx context.Context, user *store.Use
 }
 
 func (app *application) getUser(ctx context.Context, userID int64) (*store.User, error) {
+	if !app.config.redisCfg.enabled {
+		return app.store.Users.GetByID(ctx, userID)
+	}
+
 	user, err := app.cacheStore.Users.Get(ctx, userID)
 	if err != nil {
 		return nil, err
