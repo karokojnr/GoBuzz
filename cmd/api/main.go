@@ -65,7 +65,7 @@ func main() {
 			},
 			token: tokenConfig{
 				secret: env.GetString("AUTH_TOKEN_SECRET", "changeme"),
-				exp:    time.Hour * 24 * 3, // 3 days
+				exp:    time.Hour * 24 * 3,
 				iss:    "gobuzz",
 			},
 		},
