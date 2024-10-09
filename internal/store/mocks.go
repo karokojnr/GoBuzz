@@ -27,7 +27,7 @@ func (s *MockUserStore) Activate(ctx context.Context, token string) error {
 }
 
 func (s *MockUserStore) GetByID(ctx context.Context, id int64) (*User, error) {
-	return nil, nil
+	return &User{ID: id}, nil
 }
 
 func (s *MockUserStore) GetByEmail(ctx context.Context, email string) (*User, error) {
