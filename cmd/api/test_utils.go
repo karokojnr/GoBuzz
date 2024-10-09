@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/karokojnr/GoBuzz/internal/store"
@@ -20,4 +22,10 @@ func newTestApplication(t *testing.T) *application {
 		store:      mockStore,
 		cacheStore: mockCacheStore,
 	}
+}
+
+func executeRequest(req *http.Request, mux http.Handler) *httptest.ResponseRecorder {
+	rr := httptest.NewRecorder()
+	mux.ServeHTTP(rr, req)
+	return rr
 }
