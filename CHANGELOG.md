@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/karokojnr/GoBuzz/compare/v1.0.0...v1.1.0) (2024-10-10)
+
+
+### Features
+
+* Update api version automatically ([96e0b7d](https://github.com/karokojnr/GoBuzz/commit/96e0b7d96614124d1cd81fe0ce9b2bbf3803573c))
+
 ## 1.0.0 (2024-10-10)
 
 
