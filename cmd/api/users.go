@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"net/http"
 	"strconv"
 
@@ -162,31 +161,31 @@ func (app *application) activateUserHandler(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (app *application) usersContextMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
-		if err != nil {
-			app.badRequestError(w, r, err)
-			return
-		}
+// func (app *application) usersContextMiddleware(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+// 		if err != nil {
+// 			app.badRequestError(w, r, err)
+// 			return
+// 		}
 
-		ctx := r.Context()
-		user, err := app.store.Users.GetByID(ctx, id)
-		if err != nil {
-			switch err {
-			case store.ErrNotFound:
-				app.notFoundError(w, r, err)
-				return
-			default:
-				app.internalServerError(w, r, err)
-				return
-			}
-		}
+// 		ctx := r.Context()
+// 		user, err := app.store.Users.GetByID(ctx, id)
+// 		if err != nil {
+// 			switch err {
+// 			case store.ErrNotFound:
+// 				app.notFoundError(w, r, err)
+// 				return
+// 			default:
+// 				app.internalServerError(w, r, err)
+// 				return
+// 			}
+// 		}
 
-		ctx = context.WithValue(ctx, userCtx, user)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
+// 		ctx = context.WithValue(ctx, userCtx, user)
+// 		next.ServeHTTP(w, r.WithContext(ctx))
+// 	})
+// }
 
 func getUserFromContext(r *http.Request) *store.User {
 	user, ok := r.Context().Value(userCtx).(*store.User)
