@@ -16,7 +16,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const version = "0.0.1"
+const version = ""
 
 //	@title			GoBuzz API
 //	@description	API for GoBuzz, a social media platform for GO developers
