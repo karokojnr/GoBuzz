@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/karokojnr/GoBuzz/compare/v1.1.0...v1.2.0) (2024-10-10)
+
+
+### Features
+
+* Dockerfile :whale: ([a3a4b1a](https://github.com/karokojnr/GoBuzz/commit/a3a4b1aaa4ea03a19aaa8346af1b71970c5327dc))
+
+
+### Bug Fixes
+
+* rate limiter locking bugfix :bug: ([c342c91](https://github.com/karokojnr/GoBuzz/commit/c342c91fad43dfb60ecc6f50b084c58993751666))
+
 ## [1.1.0](https://github.com/karokojnr/GoBuzz/compare/v1.0.0...v1.1.0) (2024-10-10)
 
 
