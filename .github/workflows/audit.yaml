@@ -20,7 +20,7 @@ jobs:
           go-version: 1.22
 
       - name: Verify Dependencies
-        run: go mod cerify
+        run: go mod verify
 
       - name: Build
         run: go build -v ./...
