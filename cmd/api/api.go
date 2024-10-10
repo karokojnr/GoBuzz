@@ -16,6 +16,7 @@ import (
 	"github.com/karokojnr/GoBuzz/docs" // this is required to generate swagger docs
 	"github.com/karokojnr/GoBuzz/internal/auth"
 	"github.com/karokojnr/GoBuzz/internal/mailer"
+	"github.com/karokojnr/GoBuzz/internal/ratelimiter"
 	"github.com/karokojnr/GoBuzz/internal/store"
 	"github.com/karokojnr/GoBuzz/internal/store/cache"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
@@ -29,6 +30,7 @@ type application struct {
 	logger        *zap.SugaredLogger
 	mailer        mailer.Client
 	authenticator auth.Authenticator
+	rateLimiter   ratelimiter.RateLimiter
 }
 
 type config struct {
@@ -40,6 +42,7 @@ type config struct {
 	frontendURL string
 	auth        authConfig
 	redisCfg    redisConfig
+	rateLimiter ratelimiter.Config
 }
 
 type redisConfig struct {
@@ -98,6 +101,7 @@ func (app *application) mount() http.Handler {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(app.RateLimiterMiddleware)
 
 	// Set a timeout value on the request context (ctx), that will signal
 	// through ctx.Done() that the request has timed out and further

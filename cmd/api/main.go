@@ -8,6 +8,7 @@ import (
 	"github.com/karokojnr/GoBuzz/internal/db"
 	"github.com/karokojnr/GoBuzz/internal/env"
 	"github.com/karokojnr/GoBuzz/internal/mailer"
+	"github.com/karokojnr/GoBuzz/internal/ratelimiter"
 	"github.com/karokojnr/GoBuzz/internal/store"
 	"github.com/karokojnr/GoBuzz/internal/store/cache"
 	"go.uber.org/zap"
@@ -69,6 +70,11 @@ func main() {
 				iss:    "gobuzz",
 			},
 		},
+		rateLimiter: ratelimiter.Config{
+			RequestsPerTimeFrame: env.GetInt("RATE_LIMITER_REQUEST_PER_TIME_FRAME", 20),
+			TimeFrame:            time.Second * 5,
+			Enabled:              env.GetBool("RATE_LIMITER_ENABLED", true),
+		},
 	}
 
 	// Logger
@@ -92,12 +98,14 @@ func main() {
 	logger.Info("successfully connected to the database🚀")
 
 	// Cache
-
 	var rdb *redis.Client
 	if cfg.redisCfg.enabled {
 		rdb = cache.NewRedisClient(cfg.redisCfg.addr, cfg.redisCfg.pw, cfg.redisCfg.db)
 		logger.Info("redis connection established🚀")
 	}
+
+	// Rate limiter
+	rateLimiter := ratelimiter.NewFixedWindowRateLimiter(cfg.rateLimiter.RequestsPerTimeFrame, cfg.rateLimiter.TimeFrame)
 
 	store := store.NewStorage(db)
 	cacheStore := cache.NewRedisStorage(rdb)
@@ -113,7 +121,7 @@ func main() {
 		logger:        logger,
 		mailer:        mailer,
 		authenticator: jwtAuthenticator,
-
+		rateLimiter:   rateLimiter,
 	}
 
 	mux := app.mount()
